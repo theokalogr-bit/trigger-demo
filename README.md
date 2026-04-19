@@ -97,6 +97,11 @@ You receive an email with a CSV attachment like this:
 
 ---
 
-## Author
+## Use Cases
 
-Built by [theokalogr-bit](https://github.com/theokalogr-bit)
+- **Web designers and agencies** — stop manually hunting for prospects without websites; get a fresh CSV of qualified leads delivered to your inbox automatically
+- **AI automation consultants** — use this as a proof-of-concept to show Greek businesses what automated lead generation looks like in practice
+- **Sales teams** — target any city, any business type; just change the search query in the config
+
+---
+Built by [Theo](https://github.com/theokalogr-bit) — AI automation consultant based in Greece.
