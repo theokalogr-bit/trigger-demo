@@ -1,107 +1,74 @@
-# Dentist Lead Scraper — Athens, Greece
+# Dentist Lead Scraper — Athens
 
-An automated lead generation tool built with **Trigger.dev**, **TypeScript**, and **SerpAPI**.
+> Automated lead generation that finds local businesses with no website and delivers qualified prospects to your inbox — zero manual work.
 
-It finds dentists in Athens, Greece who have **no website** — potential clients for web design services — and delivers a ready-to-use CSV directly to your inbox.
+Most web designers and automation consultants waste hours searching Google Maps by hand to find businesses that need their services. This tool does it automatically: search a city and business type, filter for those without websites, and get a CSV of warm leads delivered to your inbox. Change the search query and it works for any city, any industry.
 
----
+## Demo
 
-## What It Does
-
-1. Searches Google Maps for dentists in Athens, Greece via SerpAPI
-2. Filters out businesses that already have a website
-3. Collects the top 5 leads (name, address, phone, Google Maps link)
-4. Generates a CSV file
-5. Sends it to your email automatically via Resend
-
----
-
-## Tech Stack
-
-| Tool | Purpose |
-|---|---|
-| [Trigger.dev](https://trigger.dev) | Task orchestration & cloud execution |
-| [SerpAPI](https://serpapi.com) | Google Maps scraping |
-| [Resend](https://resend.com) | Transactional email delivery |
-| TypeScript | Language |
-| Node.js | Runtime |
-
----
-
-## Project Structure
-
-```
-src/trigger/lead-scraper/
-  scrape-leads.ts    ← main automation task
-trigger.config.ts    ← Trigger.dev project config
-tsconfig.json        ← TypeScript config
-package.json
-```
-
----
+> Demo GIF coming soon — see [Setup](#setup) to run locally.
 
 ## How It Works
 
-The core task (`scrape-dentist-leads`) runs entirely in the cloud on Trigger.dev's infrastructure:
-
-- Paginates through Google Maps results (up to 100 listings) to find businesses without a website
-- Stops as soon as 5 qualifying leads are found
-- Builds a clean CSV and sends it as an email attachment
-
-```typescript
-// Filter dentists with no website
-const noWebsite = pageResults.filter(
-  (place) => !place.website || place.website.trim() === ""
-);
+```
+Trigger.dev scheduled job
+         │
+         ▼
+SerpAPI → Google Maps search: "dentists in Athens"
+         │
+         ▼
+Filter: businesses with no website listed
+         │
+         ▼
+Top 5 leads compiled into CSV
+         │
+         ▼
+Resend → CSV delivered to your inbox
 ```
 
----
+## Tech Stack
+
+| Component | Role |
+|-----------|------|
+| Trigger.dev | Cloud job orchestration — runs on schedule or on demand |
+| SerpAPI | Google Maps data extraction |
+| Resend | Transactional email with CSV attachment |
+| TypeScript + Node.js | Core logic |
 
 ## Setup
 
-### 1. Clone the repo
-
+**1. Install dependencies:**
 ```bash
-git clone https://github.com/theokalogr-bit/trigger-demo.git
-cd trigger-demo
 npm install
 ```
 
-### 2. Create a `.env` file
-
-```env
-TRIGGER_SECRET_KEY=     # cloud.trigger.dev → Settings → API Keys
-SERPAPI_API_KEY=        # serpapi.com → Dashboard
-RESEND_API_KEY=         # resend.com → API Keys
-RECIPIENT_EMAIL=        # email address to receive the leads CSV
+**2. Add your API keys to `.env`:**
+```
+TRIGGER_SECRET_KEY=     # from cloud.trigger.dev → Settings
+SERPAPI_API_KEY=        # from serpapi.com
+RESEND_API_KEY=         # from resend.com
+LEAD_RECIPIENT_EMAIL=   # where you want leads delivered
 ```
 
-### 3. Run locally
-
+**3. Deploy to Trigger.dev:**
 ```bash
-npm run dev
+npx trigger.dev@latest deploy
 ```
 
-Then trigger the task from the [Trigger.dev dashboard](https://cloud.trigger.dev).
+**4. Trigger a run** from the Trigger.dev dashboard or set a cron schedule.
 
----
+## Adapting It
 
-## Output
-
-You receive an email with a CSV attachment like this:
-
-| Name | Address | Phone | Google Maps URL |
-|---|---|---|---|
-| Tooth Experts Athens | Λεωφόρος Αλεξάνδρας 10, Αθήνα | +30 210 000 0000 | maps.google.com/... |
-| Art Smile Dental Clinic | Πανεπιστημίου 25, Αθήνα | +30 210 000 0001 | maps.google.com/... |
-
----
+Change the search query in `src/index.ts` to target any city or business type:
+```typescript
+const query = "lawyers in Thessaloniki"; // any city, any business type
+```
 
 ## Use Cases
 
-- **Web designers and agencies** — stop manually hunting for prospects without websites; get a fresh CSV of qualified leads delivered to your inbox automatically
-- **AI automation consultants** — use this as a proof-of-concept to show Greek businesses what automated lead generation looks like in practice
-- **Sales teams** — target any city, any business type; just change the search query in the config
+- **Web designers** — build a prospect list of local businesses that need a website
+- **AI automation consultants** — demonstrate automation value to potential clients
+- **Sales teams** — generate hyper-local B2B leads at scale
 
 ---
-Built by [Theo](https://github.com/theokalogr-bit) — AI automation consultant based in Greece.
+Built by [Theo](https://github.com/theokalogr-bit) — AI automation consultant based in Athens, Greece.
